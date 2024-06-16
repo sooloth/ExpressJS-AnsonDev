@@ -8,21 +8,29 @@ const router = Router();
 
 router.get("/api/users", 
 query('filter')
-.isString()
-.notEmpty()
-.withMessage('must not be empty')
-.isLength({ min: 3, max: 10 })
-.withMessage('Must be at least 3-10 characters'),
+    .isString()
+    .notEmpty()
+    .withMessage('must not be empty')
+    .isLength({ min: 3, max: 10 })
+    .withMessage('Must be at least 3-10 characters'),
  (req, res) => {  
-//query params
-const result = validationResult(req)
-console.log(result)
-const {query: { filter, value }} = req;
-//when filter and value are undefined
-if(filter && value) return res.send(
-    mockUsers.filter((user) => user[filter].includes(value))
-)
-return res.send(mockUsers)
+    console.log(req.session.id)
+    req.sessionStore.get(req.session.id, (err, sessionData) => {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        console.log(sessionData)
+    })
+    //query params
+    const result = validationResult(req)
+    console.log(result)
+    const {query: { filter, value }} = req;
+    //when filter and value are undefined
+        if(filter && value) return res.send(
+        mockUsers.filter((user) => user[filter].includes(value))
+        );  
+    return res.send(mockUsers)
 })
 
 router.get('/api/users/:id', resolveIndexByUserById, (req, res) => {
