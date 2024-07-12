@@ -4,6 +4,7 @@ import { mockUsers } from '../utils/constants.mjs';
 import { resolveIndexByUserById } from '../utils/middlewares.mjs';
 import { User } from '../mongoose/schemas/user.js';
 import {createUserValidationSchema} from '../utils/validationSchemas.mjs';
+import { hashedpassword } from '../utils/helper.js';
 
 const router = Router();
 
@@ -47,6 +48,8 @@ router.post('/api/users', checkSchema(createUserValidationSchema), async (req, r
     if (!result.isEmpty()) return res.status(400).send(result.array());
     const data = matchedData(req);
     console.log(data);
+    data.password = hashedpassword(data.password)
+    console.log(data)
     const newUser = new User(data);
     try {
         const savedUser = await newUser.save();

@@ -12,3 +12,5 @@ validation
 Routers
 Cookies
 session
+passportjs and authen
+hashed Password
